@@ -16,13 +16,13 @@ public class DemoController {
         return ResponseEntity.ok("Hello from secured url");
     }
 
-//    @GetMapping("/admin_only")
-//    public ResponseEntity<String> adminOnly() {
-////        String responseData = AES.encrypt("ALI mohamed" );
-////        String response = AES.decrypt(responseData);
-//       // return ResponseEntity.ok(responseData);
-//      return ResponseEntity.ok(response+"\n" + responseData );
-//
-//    }
+    @GetMapping("/admin_only")
+    public ResponseEntity<String> adminOnly() {
+        String responseData = AES.tripleDESEncrypt("ALI mohamed" );
+        String response = AES.tripleDESDecrypt(responseData);
+      //  return ResponseEntity.ok(responseData);
+      return ResponseEntity.ok(response+"\n" + responseData );
+
+    }
 
 }

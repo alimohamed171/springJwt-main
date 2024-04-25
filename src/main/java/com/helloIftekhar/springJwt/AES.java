@@ -1,11 +1,11 @@
 package com.helloIftekhar.springJwt;
 
-import com.helloIftekhar.springJwt.service.JwtService;
 
 import javax.crypto.Cipher;
 import javax.crypto.SecretKey;
 import javax.crypto.SecretKeyFactory;
 import javax.crypto.spec.DESKeySpec;
+import javax.crypto.spec.DESedeKeySpec;
 import javax.crypto.spec.IvParameterSpec;
 import javax.crypto.spec.SecretKeySpec;
 import java.util.Base64;
@@ -14,11 +14,13 @@ import static com.helloIftekhar.springJwt.service.JwtService.SECRET_KEY;
 
 public class AES {
 
-    static final String secretKey = SECRET_KEY; // Replace with your secret key
+    static final String secretKey = "4bb6d1dfbafb64a681139d1586b6f1160d18159afd57c8c79136d7490630407c"; // Replace with your secret key
     private static final String AES_ALGORITHM = "AES";
     private static final String DES_ALGORITHM = "DES";
     private static final String DES_CIPHER_ALGORITHM = "DES/CBC/PKCS5Padding";
-    private static final String DES_IV = "12345678"; // You may change the initialization vector
+    private static final String DES_IV = "12345678";
+    private static final String TRIPLE_DES_ALGORITHM = "DESede";
+    private static final String TRIPLE_DES_CIPHER_ALGORITHM = "DESede/CBC/PKCS5Padding";
 
     public static String encrypt(String data) {
         try {
@@ -85,6 +87,45 @@ public class AES {
         }
     }
 
+
+    public static String tripleDESEncrypt(String data) {
+        try {
+            // Triple DES encryption
+            byte[] keyBytes = hexStringToByteArray(secretKey);
+            DESedeKeySpec desedeKeySpec = new DESedeKeySpec(keyBytes);
+            SecretKeyFactory secretKeyFactory = SecretKeyFactory.getInstance(TRIPLE_DES_ALGORITHM);
+            SecretKey desedeKey = secretKeyFactory.generateSecret(desedeKeySpec);
+            Cipher desedeCipher = Cipher.getInstance(TRIPLE_DES_CIPHER_ALGORITHM);
+            desedeCipher.init(Cipher.ENCRYPT_MODE, desedeKey, new IvParameterSpec(DES_IV.getBytes()));
+            byte[] encryptedBytes = desedeCipher.doFinal(data.getBytes());
+
+            return Base64.getEncoder().encodeToString(encryptedBytes);
+        } catch (Exception e) {
+           // e.printStackTrace();
+            return null;
+        }
+    }
+
+    public static String tripleDESDecrypt(String encryptedData) {
+        try {
+            // Decode the encrypted data from Base64
+            byte[] encryptedBytes = Base64.getDecoder().decode(encryptedData);
+
+            // Triple DES decryption
+            byte[] keyBytes = hexStringToByteArray(secretKey);
+            DESedeKeySpec desedeKeySpec = new DESedeKeySpec(keyBytes);
+            SecretKeyFactory secretKeyFactory = SecretKeyFactory.getInstance(TRIPLE_DES_ALGORITHM);
+            SecretKey desedeKey = secretKeyFactory.generateSecret(desedeKeySpec);
+            Cipher desedeCipher = Cipher.getInstance(TRIPLE_DES_CIPHER_ALGORITHM);
+            desedeCipher.init(Cipher.DECRYPT_MODE, desedeKey, new IvParameterSpec(DES_IV.getBytes()));
+            byte[] decryptedBytes = desedeCipher.doFinal(encryptedBytes);
+
+            return new String(decryptedBytes);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
 
 
 }
