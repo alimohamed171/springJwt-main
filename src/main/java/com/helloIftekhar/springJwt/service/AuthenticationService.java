@@ -66,7 +66,7 @@ public class AuthenticationService {
         String jwt = jwtService.generateToken(user);
         revokeAllTokenByUser(user);
         saveUserToken(jwt, user);
-        return new AuthenticationResponse(jwt, "User login was successful",user.getUsername(),user.getId());
+        return new AuthenticationResponse(jwt, "User login was successful",user.getUsername(),user.getId(),user.getRole());
     }
     private void revokeAllTokenByUser(User user) {
         List<Token> validTokens = tokenRepository.findAllTokensByUser(user.getId());
