@@ -26,7 +26,6 @@ public class BorrowedBookServices {
 
     @Autowired
     private UserRepository userRepository;
-    private BorrowedBook borrowedBook;
 
     private int borrowBookId;
 
@@ -104,7 +103,7 @@ public class BorrowedBookServices {
         List<BorrowedBook> borrowedBookList = borrowedBookRepository.findAll();
         boolean hasBorrowedBooks = false;
         for (BorrowedBook borrowedBook : borrowedBookList) {
-            if (borrowedBook.getBook().getBookID()== bookId && borrowedBook.getUser().getId()==userId) {
+            if (borrowedBook.getBook().getBookID()== bookId && borrowedBook.getUser().getId()==userId && !borrowedBook.getStatus().equals("returned")) {
                 hasBorrowedBooks = true;
                 // id
                 borrowBookId = borrowedBook.getId();

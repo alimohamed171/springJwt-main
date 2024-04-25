@@ -86,7 +86,7 @@ public class BookController {
             @PathVariable int id,
             @RequestBody Book bookDetails
     ){
-        Optional<?> updatedBook = bookService.updateBook(id,bookDetails);
+        Optional<?> updatedBook = bookService.updateBook(id,encrypt(bookDetails));
         return ResponseEntity.ok(updatedBook);
 
     }
