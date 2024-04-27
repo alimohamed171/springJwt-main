@@ -1,5 +1,6 @@
 package com.helloIftekhar.springJwt.service;
 
+import com.helloIftekhar.springJwt.AES;
 import com.helloIftekhar.springJwt.model.AuthenticationResponse;
 import com.helloIftekhar.springJwt.model.Role;
 import com.helloIftekhar.springJwt.model.Token;
@@ -43,19 +44,21 @@ public class AuthenticationService {
             return new AuthenticationResponse(null, "User already exist");
         }
         User user = new User();
-        user.setFirstName(request.getFirstName());
-        user.setLastName(request.getLastName());
-        user.setUsername(request.getUsername());
-
+        //encrypt
+        user.setFirstName(AES.tripleDESEncrypt(request.getFirstName()));
+        user.setLastName(AES.tripleDESEncrypt(request.getLastName()));
+        user.setUsername(AES.tripleDESEncrypt(request.getUsername()));
+        //hash
         user.setPassword(passwordEncoder.encode(request.getPassword()));
         user.setRole(request.getRole());
         user = repository.save(user);
         String jwt = jwtService.generateToken(user);
         saveUserToken(jwt, user);
-        return new AuthenticationResponse(jwt, "User registration was successful");
+        return new AuthenticationResponse(jwt, "User registration was successful",user.getUsername(),user.getId(),user.getRole());
     }
 
     public AuthenticationResponse authenticate(User request) {
+        request.setUsername( AES.tripleDESEncrypt(request.getUsername()) );
         authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(
                         request.getUsername(),
@@ -66,7 +69,8 @@ public class AuthenticationService {
         String jwt = jwtService.generateToken(user);
         revokeAllTokenByUser(user);
         saveUserToken(jwt, user);
-        return new AuthenticationResponse(jwt, "User login was successful",user.getUsername(),user.getId(),user.getRole());
+        String userName = AES.tripleDESDecrypt(user.getUsername());
+        return new AuthenticationResponse(jwt, "User login was successful",userName,user.getId(),user.getRole());
     }
     private void revokeAllTokenByUser(User user) {
         List<Token> validTokens = tokenRepository.findAllTokensByUser(user.getId());
