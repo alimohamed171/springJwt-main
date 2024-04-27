@@ -2,7 +2,9 @@ package com.helloIftekhar.springJwt.service;
 
 
 import com.helloIftekhar.springJwt.model.Book;
+import com.helloIftekhar.springJwt.model.BorrowedBook;
 import com.helloIftekhar.springJwt.repository.BookRepository;
+import com.helloIftekhar.springJwt.repository.BorrowBookRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -14,7 +16,8 @@ public class BookService {
     @Autowired
     private BookRepository bookRepo;
 
-
+    @Autowired
+    private BorrowBookRepo borrowBookRepo;
     public void addBook(Book book) {
         bookRepo.save(book);
     }
@@ -50,6 +53,18 @@ public class BookService {
         return Optional.of(("Book with id " + id + " not found"));
     }
 
+    public Boolean checkBorrowedBooksByBookId(int id) {
+
+        List<BorrowedBook> borrowedBookList = borrowBookRepo.findAll();
+        boolean hasBorrowedBooks = false;
+        for (BorrowedBook borrowedBook : borrowedBookList) {
+            if (borrowedBook.getBook().getBookID()== id) {
+                hasBorrowedBooks = true;
+                return hasBorrowedBooks ;
+            }
+        }
+        return hasBorrowedBooks;
+    }
 
     public boolean bookIsExist(int id) {
         boolean flag =bookRepo.findById(id).isPresent();

@@ -56,16 +56,20 @@ public class BookController {
     public ResponseEntity<String> deleteBookById(
             @PathVariable int id
     ) {
-        if (!bookService.bookIsExist(id)) {
-            return ResponseEntity.ok("book with provided id does not exist");// Return a 204 No Content response
-        }   else{
-            bookService.deleteById(id);
-            return ResponseEntity.ok("Book with ID " + id + " deleted successfully");
+        if (bookService.bookIsExist(id)) {
+            if(bookService.checkBorrowedBooksByBookId(id)){
+                return ResponseEntity.ok("this book is already borrowed");
+            }
+            else{
+                bookService.deleteById(id);
+                return ResponseEntity.ok("Book with ID " + id + " deleted successfully");
+
+            }
 
         }
-        //return ResponseEntity.status(HttpStatus.CONFLICT).body("book with provided id does not exist");
-    }
+        return ResponseEntity.status(HttpStatus.CONFLICT).body("book with provided id does not exist");
 
+    }
     @GetMapping("/getAllBooks")
     public List<Book> getAllBooks(){
 
