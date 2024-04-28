@@ -42,7 +42,7 @@ public class BookController {
             return ResponseEntity.status(HttpStatus.CONFLICT).body("book title already exists.");
         }
 
-        String isbn = AES.encrypt(book.getISBN());
+        String isbn = AES.tripleDESEncrypt(book.getISBN());
         if (!bookService.isISBNAvailable(isbn)) {
             return ResponseEntity.status(HttpStatus.CONFLICT).body("isbn already exists.");
         }
@@ -76,9 +76,9 @@ public class BookController {
         List<Book> bookList = bookService.getAllBooks();
 
         for (Book book : bookList) {
-          book.setISBN(AES.decrypt(book.getISBN()));
-          book.setImageLink(AES.decrypt(book.getImageLink()));
-          book.setAuthor(AES.decrypt(book.getAuthor()));
+          book.setISBN(AES.tripleDESDecrypt(book.getISBN()));
+          book.setImageLink(AES.tripleDESDecrypt(book.getImageLink()));
+          book.setAuthor(AES.tripleDESDecrypt(book.getAuthor()));
           book.setRackNumber(book.getRackNumber());
         }
 
@@ -97,9 +97,9 @@ public class BookController {
 
     private Book encrypt(Book book){
         Book encreptedBook = book;
-        encreptedBook.setISBN(AES.encrypt(book.getISBN()));
-        encreptedBook.setImageLink(AES.encrypt(book.getImageLink()));
-        encreptedBook.setAuthor(AES.encrypt(book.getAuthor()));
+        encreptedBook.setISBN(AES.tripleDESEncrypt(book.getISBN()));
+        encreptedBook.setImageLink(AES.tripleDESEncrypt(book.getImageLink()));
+        encreptedBook.setAuthor(AES.tripleDESEncrypt(book.getAuthor()));
         encreptedBook.setRackNumber(book.getRackNumber());
         return encreptedBook;
     }
