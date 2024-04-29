@@ -14,10 +14,7 @@ import static com.helloIftekhar.springJwt.service.JwtService.SECRET_KEY;
 
 public class AES {
 
-    static final String secretKey = "4bb6d1dfbafb64a681139d1586b6f1160d18159afd57c8c79136d7490630407c"; // Replace with your secret key
-//    private static final String AES_ALGORITHM = "AES";
-//    private static final String DES_ALGORITHM = "DES";
-//    private static final String DES_CIPHER_ALGORITHM = "DES/CBC/PKCS5Padding";
+    static final String secretKey = SECRET_KEY; // Replace with your secret key
     private static final String DES_IV = "12345678";
     private static final String TRIPLE_DES_ALGORITHM = "DESede";
     private static final String TRIPLE_DES_CIPHER_ALGORITHM = "DESede/CBC/PKCS5Padding";
