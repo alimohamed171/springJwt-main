@@ -1,10 +1,8 @@
 package com.helloIftekhar.springJwt.controller;
 
 
-import com.helloIftekhar.springJwt.AES;
-import com.helloIftekhar.springJwt.Converter;
+import com.helloIftekhar.springJwt.DES;
 import com.helloIftekhar.springJwt.model.Book;
-import com.helloIftekhar.springJwt.model.BorrowedBook;
 import com.helloIftekhar.springJwt.service.BookService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -24,11 +22,9 @@ public class BookController {
 
     @PostMapping("/admin_only/addBook")
     public ResponseEntity<?> addBook(
-            @RequestHeader("Authorization") String authorizationHeader,
             @RequestBody Book book
     ) {
-        // Extract JWT token from the Authorization header
-        String jwtToken = authorizationHeader.replace("Bearer ", "");
+
 
         if(book.getTitle().trim().isEmpty()){
             return ResponseEntity.status(HttpStatus.CONFLICT).body("book title is empty.");
@@ -42,7 +38,7 @@ public class BookController {
             return ResponseEntity.status(HttpStatus.CONFLICT).body("book title already exists.");
         }
 
-        String isbn = AES.tripleDESEncrypt(book.getISBN());
+        String isbn = DES.tripleDESEncrypt(book.getISBN());
         if (!bookService.isISBNAvailable(isbn)) {
             return ResponseEntity.status(HttpStatus.CONFLICT).body("isbn already exists.");
         }
@@ -76,9 +72,9 @@ public class BookController {
         List<Book> bookList = bookService.getAllBooks();
 
         for (Book book : bookList) {
-          book.setISBN(AES.tripleDESDecrypt(book.getISBN()));
-          book.setImageLink(AES.tripleDESDecrypt(book.getImageLink()));
-          book.setAuthor(AES.tripleDESDecrypt(book.getAuthor()));
+          book.setISBN(DES.tripleDESDecrypt(book.getISBN()));
+          book.setImageLink(DES.tripleDESDecrypt(book.getImageLink()));
+          book.setAuthor(DES.tripleDESDecrypt(book.getAuthor()));
           book.setRackNumber(book.getRackNumber());
         }
 
@@ -97,9 +93,9 @@ public class BookController {
 
     private Book encrypt(Book book){
         Book encreptedBook = book;
-        encreptedBook.setISBN(AES.tripleDESEncrypt(book.getISBN()));
-        encreptedBook.setImageLink(AES.tripleDESEncrypt(book.getImageLink()));
-        encreptedBook.setAuthor(AES.tripleDESEncrypt(book.getAuthor()));
+        encreptedBook.setISBN(DES.tripleDESEncrypt(book.getISBN()));
+        encreptedBook.setImageLink(DES.tripleDESEncrypt(book.getImageLink()));
+        encreptedBook.setAuthor(DES.tripleDESEncrypt(book.getAuthor()));
         encreptedBook.setRackNumber(book.getRackNumber());
         return encreptedBook;
     }

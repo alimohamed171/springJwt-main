@@ -1,8 +1,7 @@
 package com.helloIftekhar.springJwt.service;
 
-import com.helloIftekhar.springJwt.AES;
+import com.helloIftekhar.springJwt.DES;
 import com.helloIftekhar.springJwt.model.AuthenticationResponse;
-import com.helloIftekhar.springJwt.model.Role;
 import com.helloIftekhar.springJwt.model.Token;
 import com.helloIftekhar.springJwt.model.User;
 import com.helloIftekhar.springJwt.repository.TokenRepository;
@@ -13,7 +12,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class AuthenticationService {
@@ -39,15 +37,15 @@ public class AuthenticationService {
     }
 
     public AuthenticationResponse register(User request) {
-
-        if(repository.findByUsername(request.getUsername()).isPresent()) {
+// ali ********
+        if(repository.findByUsername(   DES.tripleDESEncrypt(request.getUsername())).isPresent()) {
             return new AuthenticationResponse(null, "User already exist");
         }
         User user = new User();
         //encrypt
-        user.setFirstName(AES.tripleDESEncrypt(request.getFirstName()));
-        user.setLastName(AES.tripleDESEncrypt(request.getLastName()));
-        user.setUsername(AES.tripleDESEncrypt(request.getUsername()));
+        user.setFirstName(DES.tripleDESEncrypt(request.getFirstName()));
+        user.setLastName(DES.tripleDESEncrypt(request.getLastName()));
+        user.setUsername(DES.tripleDESEncrypt(request.getUsername()));
         //hash
         user.setPassword(passwordEncoder.encode(request.getPassword()));
         user.setRole(request.getRole());
@@ -58,7 +56,7 @@ public class AuthenticationService {
     }
 
     public AuthenticationResponse authenticate(User request) {
-        request.setUsername( AES.tripleDESEncrypt(request.getUsername()) );
+        request.setUsername( DES.tripleDESEncrypt(request.getUsername()) );
         authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(
                         request.getUsername(),
@@ -69,7 +67,7 @@ public class AuthenticationService {
         String jwt = jwtService.generateToken(user);
         revokeAllTokenByUser(user);
         saveUserToken(jwt, user);
-        String userName = AES.tripleDESDecrypt(user.getUsername());
+        String userName = DES.tripleDESDecrypt(user.getUsername());
         return new AuthenticationResponse(jwt, "User login was successful",userName,user.getId(),user.getRole());
     }
     private void revokeAllTokenByUser(User user) {

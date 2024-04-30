@@ -4,15 +4,13 @@ package com.helloIftekhar.springJwt;
 import javax.crypto.Cipher;
 import javax.crypto.SecretKey;
 import javax.crypto.SecretKeyFactory;
-import javax.crypto.spec.DESKeySpec;
 import javax.crypto.spec.DESedeKeySpec;
 import javax.crypto.spec.IvParameterSpec;
-import javax.crypto.spec.SecretKeySpec;
 import java.util.Base64;
 
 import static com.helloIftekhar.springJwt.service.JwtService.SECRET_KEY;
 
-public class AES {
+public class DES {
 
     static final String secretKey = SECRET_KEY; // Replace with your secret key
     private static final String DES_IV = "12345678";
@@ -50,60 +48,6 @@ public class AES {
         System.out.println(data);
         return data;
     }
-
-//    public static String encrypt(String data) {
-//        try {
-//            // AES encryption
-//            byte[] keyBytes = hexStringToByteArray(secretKey);
-//            SecretKeySpec aesKey = new SecretKeySpec(keyBytes, AES_ALGORITHM);
-//            Cipher aesCipher = Cipher.getInstance(AES_ALGORITHM);
-//            aesCipher.init(Cipher.ENCRYPT_MODE, aesKey);
-//            byte[] aesEncryptedBytes = aesCipher.doFinal(data.getBytes());
-//
-//
-//            // DES encryption
-//            DESKeySpec desKeySpec = new DESKeySpec(secretKey.getBytes());
-//            SecretKeyFactory desKeyFactory = SecretKeyFactory.getInstance(DES_ALGORITHM);
-//            SecretKey desKey = desKeyFactory.generateSecret(desKeySpec);
-//            Cipher desCipher = Cipher.getInstance(DES_CIPHER_ALGORITHM);
-//            desCipher.init(Cipher.ENCRYPT_MODE, desKey, new IvParameterSpec(DES_IV.getBytes()));
-//            byte[] desEncryptedBytes = desCipher.doFinal(aesEncryptedBytes);
-//
-//            return Base64.getEncoder().encodeToString(desEncryptedBytes);
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//            return null;
-//        }
-//    }
-
-
-//    public static String decrypt(String encryptedData) {
-//        try {
-//            // Decode the encrypted data from Base64
-//            byte[] encryptedBytes = Base64.getDecoder().decode(encryptedData);
-//
-//            // DES decryption
-//            DESKeySpec desKeySpec = new DESKeySpec(secretKey.getBytes());
-//            SecretKeyFactory desKeyFactory = SecretKeyFactory.getInstance(DES_ALGORITHM);
-//            SecretKey desKey = desKeyFactory.generateSecret(desKeySpec);
-//            Cipher desCipher = Cipher.getInstance(DES_CIPHER_ALGORITHM);
-//            desCipher.init(Cipher.DECRYPT_MODE, desKey, new IvParameterSpec(DES_IV.getBytes()));
-//            byte[] desDecryptedBytes = desCipher.doFinal(encryptedBytes);
-//
-//            // AES decryption
-//            byte[] keyBytes = hexStringToByteArray(secretKey);
-//            SecretKeySpec aesKey = new SecretKeySpec(keyBytes, AES_ALGORITHM);
-//            Cipher aesCipher = Cipher.getInstance(AES_ALGORITHM);
-//            aesCipher.init(Cipher.DECRYPT_MODE, aesKey);
-//            byte[] aesDecryptedBytes = aesCipher.doFinal(desDecryptedBytes);
-//
-//            return new String(aesDecryptedBytes);
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//            return null;
-//        }
-//    }
-
 
 
 

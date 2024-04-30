@@ -1,12 +1,9 @@
 package com.helloIftekhar.springJwt.controller;
 
-import com.helloIftekhar.springJwt.AES;
-import com.helloIftekhar.springJwt.model.User;
+import com.helloIftekhar.springJwt.DES;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
-
-import static com.helloIftekhar.springJwt.Converter.convertToString;
 
 @RestController
 public class DemoController {
@@ -18,8 +15,8 @@ public class DemoController {
 
     @GetMapping("/admin_only")
     public ResponseEntity<String> adminOnly() {
-        String responseData = AES.tripleDESEncrypt("ALI mohamed" );
-        String response = AES.tripleDESDecrypt(responseData);
+        String responseData = DES.tripleDESEncrypt("ALI mohamed" );
+        String response = DES.tripleDESDecrypt(responseData);
       //  return ResponseEntity.ok(responseData);
       return ResponseEntity.ok(response+"\n" + responseData );
 
